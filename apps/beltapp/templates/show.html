@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+    .banner{ 
+        display : inline-block;
+        vertical-align: top;
+        margin:0px; 
+        padding:0px;
+        margin-left: 0.5em;
+    }
+    .trip{
+        display: inline-block;
+        vertical-align: top;
+        margin-left: 1em;
+    }
+    .space{
+        margin-left: 800px;
+    }    
+    </style>
+    <title>Document</title>
+
+</head>
+<body>
+    <div class = "banner">
+        <h1 class = "banner"> Trip to {{this_trip.destination}} </h1>
+        <a class = "btn btn-info space" href="/wall">Back</a>
+        <a class = "btn btn-danger" href="/logout" class = "logout banner"> Logout</a>
+    </div>
+    <div class = "container">
+            <p>Description: {{this_trip.description}}</p>
+            {%if request.session.user_id == this_trip.owner.id%}
+                <p>Planned by: You!</p>
+            {%else%}
+                <p>Planned by: {{this_trip.owner.first_name}}</p>
+            {%endif%}
+            <p>Trip Start: {{this_trip.trip_start}}</p>
+            <p>Trip End: {{this_trip.trip_end}}</p>
+    </div>
+    <div class = "container">
+        <h4>Other people going</h4>
+        {%for x in this_trip.attendees.all%}
+            {%if x.id != request.session.user_id%}
+            <p>{{x.first_name}}</p>
+            {%endif%}
+        {%endfor%}
+    </div>
+</body>
+</html>

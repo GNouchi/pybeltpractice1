@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    .banner{ 
+        display : inline-block;
+        vertical-align: top;
+        margin:0px; 
+        padding:0px;
+    }
+    .left, .right{
+        width: 200px;
+        display: inline-block;
+        vertical-align: top;
+    }
+    button{
+        margin-top: 25px;
+    }
+    </style>
+</head>
+<body>
+    <div class = "banner">
+    <h1 class = "banner"> THIS IS LOGIN / INDEX</h1>
+    </div>
+    <div class ="main container">
+        <div class = "left">
+        <form action="register" method="post">
+            {% csrf_token %}
+            <h4>Register!</h4>
+            <input type="text" name= "first_name" class="" placeholder="First Name">
+            <input type="text" name= "last_name" class="" placeholder="Last Name">
+            <input type="text" name= "email" class="" placeholder="Email">
+            <input type="password" name= "password" class="" placeholder="Password">
+            <input type="password" name= "confirm_password" class="" placeholder="Confirm Password">
+            <button type = "submit"> Register! </button>
+        </form>
+        </div>
+        <div class = "right">
+        <form action="login" method="post">
+            {% csrf_token %}
+            <h4>Login!</h4>
+            <input type="text" name= "email" class="" placeholder="Email">
+            <input type="password" name= "password" class="" placeholder="Password">
+            <button type = "submit"> Login! </button>
+        </form>
+        </div>
+        <!-- errorbox -->
+        <div class = "errorbox">
+                {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+      <!-- /errorbox -->
+    </div>
+
+</body>
+</html>

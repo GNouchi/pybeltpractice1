@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <style>
+    .banner{ 
+        display : inline-block;
+        vertical-align: top;
+        margin:0px; 
+        padding:0px;
+    }
+    .bot, .top{
+        margin-top: 100px;
+    }
+    .logout{
+        margin-left: 800px;
+    }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+        <div class = "banner">
+                <h1 class = "banner"> Welcome back {{current_user.first_name}}</h1>
+                <a href="/logout" class = "logout banner"> Logout</a>
+            </div>
+                <div class ="main container">
+                    <div class = "top">
+            <!-- errorbox -->
+                    <div class = "errorbox">
+                        {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                            {% endif %}
+                    </div>
+            <!-- /errorbox -->    
+                        <form action="/addtrip">
+                            <button type = "submit" class = "btn btn-success btn-block"> ADD TRIP </button>
+                        </form>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">Destination</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Trip Start</th>
+                                <th scope="col">Trip End</th>
+                                <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {%for x in my_trips%}
+                            <tr>
+                                <td>
+                                    <a href="/show/{{x.id}}">{{x.destination}}</a>                                    
+                                </td>
+                                <td>{{x.description}}</td>
+                                <td>{{x.trip_start}}</td>
+                                <td>{{x.trip_end}}</td>
+                                <td>
+                                    <a href="/cancel/{{x.id}}">Cancel</a>
+                                    {%if x.owner.id == request.session.user_id%}
+                                    <a href="/destroy/{{x.id}}">|  Destroy</a>
+                                    {%endif%}
+                                </td>
+                            </tr>
+                            {%endfor%}
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class = "bot">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                <th scope="col">Destination</th>
+                                <th scope="col">Trip Start</th>
+                                <th scope="col">Trip End</th>
+                                <th scope="col">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {%for x in other_trips%}
+                            <tr>
+                                <td>
+                                    <a href="/show/{{x.id}}">{{x.destination}}</a>
+                                </td>
+                                <td>{{x.trip_start}}</td>
+                                <td>{{x.trip_end}}</td>
+                                <td>
+                                    <a href="/join/{{x.id}}">Join</a>
+                                    {%if x.owner.id == request.session.user_id%}
+                                    <a href="/destroy/{{x.id}}">|   Destroy</a>
+                                    {%endif%}    
+                                </td>
+                            </tr>
+                            {%endfor%}
+                            </tbody>
+                        </table>
+                    </div>
+            </body>
+</html>
