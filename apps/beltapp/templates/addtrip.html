@@ -27,7 +27,7 @@
 <body>
     <div class = "banner">
         <h1 class = "banner"> Add a trip </h1>
-        <a class = "btn btn-info space" ref="/wall">Back</a>
+        <a class = "btn btn-info space" href="/wall">Back</a>
         <a class = "btn btn-danger" href="/logout" class = "logout banner"> Logout</a>
     </div>
     <div class ="main">
@@ -42,6 +42,7 @@
             <label for="">End Date</label>
             <input type="date" name= "trip_end" class="form-control" >
             <input type="hidden" name = "user_id" value="{{request.session.user_id}}">
+            <input type="hidden" name = "validate_type" value = "new" >
             <button type = "submit"> Create! </button>
         </form>
         </div>

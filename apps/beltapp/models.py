@@ -96,16 +96,32 @@ class TripManager(models.Manager):
             print("errors found, escaping now...")
             return result
 # ******************************** VALIDATION PASS *************************************
-        print("Trip create pass")
-        newTrip = Trip.objects.create(
-            owner = throwaway[0],
-            destination = postData['destination'],
-            description = postData['description'],
-            trip_start = postData['trip_start'],
-            trip_end = postData['trip_end'],
-        )
-        result['newTrip'] = newTrip
-        return result
+        print("Trip validation pass")
+# create trip
+        if postData['validate_type'] == "new":
+            newTrip = Trip.objects.create(
+                owner = throwaway[0],
+                destination = postData['destination'],
+                description = postData['description'],
+                trip_start = postData['trip_start'],
+                trip_end = postData['trip_end'],
+            )
+            result['newTrip'] = newTrip
+            return result
+#update trip 
+        if postData['validate_type'] == "update":
+            this_trip = Trip.objects.get(id =postData['tripid'])
+            if str(this_trip.owner.id) != postData['user_id']:
+                result['errors'].append("You do not own this trip")
+                return result
+            this_trip.destination = postData['destination']
+            this_trip.description = postData['description']
+            this_trip.trip_start = postData['trip_start']
+            this_trip.trip_end = postData['trip_end']
+            print('*'*50 , 'UPDATE SUCCESSFUL!')
+            this_trip.save()
+            return result
+        
         
 
 class Trip(models.Model):
@@ -117,4 +133,18 @@ class Trip(models.Model):
     trip_end = models.DateTimeField(auto_now = False)
     update_d = models.DateTimeField(auto_now = True)
     objects = TripManager()
-    
+
+class dateManger(models.Model):
+    def dateConvert(this_trip):
+        result = {}
+        x = str(this_trip.trip_start)
+        y = str(this_trip.trip_end)
+        start = datetime.datetime.strptime(x, '%Y-%m-%d %H:%M:%S%z')
+        start = start.date()
+        start = start.strftime('%Y-%m-%d')
+        result['start'] = start
+        end = datetime.datetime.strptime(y, '%Y-%m-%d %H:%M:%S%z')
+        end = end.date()
+        end = end.strftime('%Y-%m-%d')
+        result['end'] = end
+        return result

@@ -102,4 +102,45 @@ def join(request, id):
     messages.error(request, ("successfully joined trip to " + this_trip.destination))
     return redirect('/wall')
 
+def edit(request, id ):
+    if 'user_id' not in request.session: 
+        return redirect('/')
+    this_trip = Trip.objects.get(id = id)
+    if this_trip.owner.id != request.session['user_id']:
+        return redirect('/wall')
+    dates = dateManger.dateConvert(this_trip)
+    context = {
+        'this_trip' : this_trip,
+        'dates' :dates,
+    }    
+    return render(request, 'edit.html', context)
+
+def applyedit(request):
+    if 'user_id' not in request.session: 
+        return redirect('/')
+    result= Trip.objects.tripValidator(request.POST)
+    if len(result['errors']) > 0:
+        for error in result['errors']:
+            messages.error(request, error)
+    return redirect('/edit/'+request.POST['tripid'])
+
+
+def removeuser(request, user, tripid):
+    if 'user_id' not in request.session: 
+        return redirect('/')
+    this_trip = Trip.objects.get(id = tripid)
+    rm_attendee = User.objects.get(id = user)
+    if this_trip.owner.id != request.session['user_id']:
+        return redirect('/wall')
+    this_trip.attendees.remove(rm_attendee)
+    print("removed ", rm_attendee.first_name , " from ", this_trip.destination)
+    return redirect('/edit/'+tripid)
+
+
+
+    
+
+
+
+
     # user1@user1.user1

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <title>Edit</title>
+    <style>
+    .banner{ 
+        display : inline-block;
+        vertical-align: top;
+        margin:0px; 
+        padding:0px;
+        margin-left: 0.5em;
+    }
+    .space{
+        margin-left: 800px;
+    }
+    .main{
+        margin:0px;
+        width: 500px;
+    }
+    </style>
+</head>
+<body>
+    <div class = "banner">
+        <h1 class = "banner"> Add a trip </h1>
+        <a class = "btn btn-info space" href="/wall">Back</a>
+        <a class = "btn btn-danger" href="/logout" class = "logout banner"> Logout</a>
+    </div>
+    <div class = "container main">
+        <form action="/applyedit" method="post">
+            {%csrf_token%}
+            <input class = "form-control" type="text" name = "destination" value = "{{this_trip.destination}}"><br>
+            <textarea class = "form-control" row="3" name = "description">{{this_trip.description}}</textarea>
+        <label for="trip_start">Trip Start</label>
+            <input class = "form-control" type="date" name = "trip_start" value = "{{dates.start}}">
+        <label for="trip_end">Trip End</label>
+            <input class = "form-control" type="date" name = "trip_end" value = "{{dates.end}}">
+            <br>
+        <input type="hidden" name = "user_id" value="{{request.session.user_id}}">
+        <input type="hidden" name = "validate_type" value = "update" >
+        <input type="hidden" name = "tripid" value = "{{this_trip.id}}" >
+            <button type = "submit" class="btn btn-primary"> Submit</button>
+            <h4>Attendees</h4>
+            <table>
+            {%for y in this_trip.attendees.all%}
+            <tr>
+                <td>{{y.first_name}}</td>
+                <td><a href="/removeuser/{{this_trip.id}}/{{y.id}}"><span aria-hidden="true">&times;</span></a></td>
+            </tr>
+            {%endfor%}
+            </table>
+        </form>
+    </div>
+    <!-- errorbox -->
+    <div class = "errorbox">
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+            {% endif %}
+    </div>
+    <!-- /errorbox -->
+
+
+</body>
+</html>
